@@ -1,6 +1,6 @@
 {
   "name": "@cubyx-pro/activepieces-piece-axigen",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A piece for ActivePieces to interact with Axigen Mailbox API",
   "license": "MIT",
   "main": "dist/index.js",
