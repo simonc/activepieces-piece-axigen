@@ -8,6 +8,9 @@
     "build": "tsc",
     "format": "prettier --write ."
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@activepieces/pieces-framework": "^0.7.46",
     "@activepieces/pieces-common": "^0.4.3",
