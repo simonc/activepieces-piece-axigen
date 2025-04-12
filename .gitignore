@@ -1,0 +1,29 @@
+# Deployment scripts
+deploy.sh
+
+# Build output
+dist/
+
+# Dependencies
+node_modules/
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+.env.local
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Cursor files
+.specstory
+chat.txt
+errorlog.txt
