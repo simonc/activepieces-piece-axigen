@@ -2,9 +2,8 @@
   "name": "@cubyx-pro/activepieces-piece-axigen",
   "version": "0.1.1",
   "description": "A piece for ActivePieces to interact with Axigen Mailbox API",
-  "type": "module",
   "license": "MIT",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write ."
@@ -13,8 +12,13 @@
     "access": "public"
   },
   "dependencies": {
-    "@activepieces/pieces-framework": "^0.7.46",
     "@activepieces/pieces-common": "^0.4.3",
-    "@activepieces/shared": "^0.10.168"
+    "@activepieces/pieces-framework": "^0.7.46",
+    "@activepieces/shared": "^0.10.168",
+    "dayjs": "^1.11.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "typescript": "^5.8.3"
   }
 }

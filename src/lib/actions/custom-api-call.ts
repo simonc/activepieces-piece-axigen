@@ -4,7 +4,7 @@ import type { AxigenAuth } from '../common/auth';
 import { makeClient } from '../common/client';
 
 export const customApiCall = createCustomApiCallAction({
-  auth: axigenAuth,
+  auth: axigenAuth as any,
   baseUrl: (auth) => makeClient(auth as AxigenAuth).baseUrl,
   authMapping: async (auth) => makeClient(auth as AxigenAuth).authHeaders,
 });
