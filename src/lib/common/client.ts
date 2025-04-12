@@ -67,6 +67,11 @@ export class AxigenClient {
     return await this.makeRequest<AxigenMail>(HttpMethod.DELETE, `/mails/${mailId}`);
   }
 
+  async downloadAttachment(mailId: string, attachmentId: number): Promise<Blob> {
+    await this.useOrStartSession();
+    return await this.makeRequest<Blob>(HttpMethod.GET, `/mails/${mailId}/attachments/${attachmentId}`);
+  }
+
   async listFolders(): Promise<AxigenListFoldersResponse> {
     await this.useOrStartSession();
     return await this.makeRequest<AxigenListFoldersResponse>(HttpMethod.GET, '/folders');
