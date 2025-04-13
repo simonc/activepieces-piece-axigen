@@ -58,7 +58,7 @@ export class AxigenClient {
   async copyMail(mailId: string, destinationFolderId: string): Promise<AxigenMail> {
     await this.useOrStartSession();
     return await this.makeRequest<AxigenMail>(HttpMethod.POST, `/mails/${mailId}/copy`, undefined, {
-      folderId: destinationFolderId,
+      destinationFolderId
     });
   }
 
@@ -89,7 +89,7 @@ export class AxigenClient {
   async moveMail(mailId: string, destinationFolderId: string): Promise<AxigenMail> {
     await this.useOrStartSession();
     return await this.makeRequest<AxigenMail>(HttpMethod.POST, `/mails/${mailId}/move`, undefined, {
-      folderId: destinationFolderId,
+      destinationFolderId
     });
   }
 
