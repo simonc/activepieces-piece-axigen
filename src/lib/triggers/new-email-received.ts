@@ -16,7 +16,7 @@ const polling: Polling<PiecePropValueSchema<typeof axigenAuth>, { folderId: stri
     const axigenClient = makeClient(auth);
     const mailsList: AxigenListMailsResponse = (await axigenClient.listMails(folderId)) ?? [];
     const items = mailsList.items.map((mail) => ({
-      epochMilliSeconds: dayjs(mail.date).valueOf(),
+      epochMilliSeconds: dayjs.unix(parseInt(mail.date)).valueOf(),
       data: mail,
     }));
 
