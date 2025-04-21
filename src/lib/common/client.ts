@@ -15,26 +15,20 @@ export class AxigenClient {
     this.sessionId = null;
   }
 
-  async makeRequest<T extends HttpMessageBody>(
-    method: HttpMethod,
-    url: string,
-    query?: QueryParams,
-    body?: object
-  ): Promise<T> {
+  async makeRequest(method: HttpMethod, url: string, query?: QueryParams, body?: object) {
     const headers = { ...this.authHeaders };
 
     if (this.sessionId) {
       headers['X-Axigen-Session'] = this.sessionId;
     }
 
-    const res = await httpClient.sendRequest<T>({
+    return await httpClient.sendRequest({
       method,
       url: `${this.baseUrl}${url}`,
       headers,
       queryParams: query,
       body,
     });
-    return res.body;
   }
 
   private async useOrStartSession() {
@@ -57,43 +51,59 @@ export class AxigenClient {
 
   async copyMail(mailId: string, destinationFolderId: string): Promise<AxigenMail> {
     await this.useOrStartSession();
-    return await this.makeRequest<AxigenMail>(HttpMethod.POST, `/mails/${mailId}/copy`, undefined, {
+    const { body } = await this.makeRequest(HttpMethod.POST, `/mails/${mailId}/copy`, undefined, {
       destinationFolderId,
     });
+    return body;
   }
 
   async deleteMail(mailId: string): Promise<AxigenMail> {
     await this.useOrStartSession();
-    return await this.makeRequest<AxigenMail>(HttpMethod.DELETE, `/mails/${mailId}`);
+    const { body } = await this.makeRequest(HttpMethod.DELETE, `/mails/${mailId}`);
+    return body;
   }
 
-  async downloadAttachment(mailId: string, attachmentId: number): Promise<Blob> {
+  async downloadAttachment(
+    mailId: string,
+    attachmentId: number,
+    outputFormat: 'original' | 'base64'
+  ): Promise<Blob | string> {
     await this.useOrStartSession();
-    return await this.makeRequest<Blob>(
+    const response = await this.makeRequest(
       HttpMethod.GET,
       `/mails/${mailId}/attachments/${attachmentId}`
     );
+
+    if (outputFormat === 'original') {
+      return response.body;
+    }
+
+    return Buffer.from(response.body).toString('base64');
   }
 
   async listFolders(): Promise<AxigenListFoldersResponse> {
     await this.useOrStartSession();
-    return await this.makeRequest<AxigenListFoldersResponse>(HttpMethod.GET, '/folders');
+    const { body } = await this.makeRequest(HttpMethod.GET, '/folders');
+    return body;
   }
 
   async listMails(folderId: string): Promise<AxigenListMailsResponse> {
     await this.useOrStartSession();
-    return await this.makeRequest<AxigenListMailsResponse>(HttpMethod.GET, '/mails', { folderId });
+    const { body } = await this.makeRequest(HttpMethod.GET, '/mails', { folderId });
+    return body;
   }
 
   async startSession(): Promise<AxigenLoginResponse> {
-    return await this.makeRequest<AxigenLoginResponse>(HttpMethod.POST, '/login');
+    const { body } = await this.makeRequest(HttpMethod.POST, '/login');
+    return body;
   }
 
   async moveMail(mailId: string, destinationFolderId: string): Promise<AxigenMail> {
     await this.useOrStartSession();
-    return await this.makeRequest<AxigenMail>(HttpMethod.POST, `/mails/${mailId}/move`, undefined, {
+    const { body } = await this.makeRequest(HttpMethod.POST, `/mails/${mailId}/move`, undefined, {
       destinationFolderId,
     });
+    return body;
   }
 
   async updateMail(
@@ -103,22 +113,24 @@ export class AxigenClient {
   ): Promise<AxigenMail> {
     await this.useOrStartSession();
 
-    const body: Record<string, boolean> = {};
+    const reqBody: Record<string, boolean> = {};
 
     if (isUnread !== null) {
-      body['isUnread'] = isUnread;
+      reqBody['isUnread'] = isUnread;
     }
 
     if (isFlagged !== null) {
-      body['isFlagged'] = isFlagged;
+      reqBody['isFlagged'] = isFlagged;
     }
 
-    return await this.makeRequest<AxigenMail>(
+    const { body } = await this.makeRequest(
       HttpMethod.PATCH,
       `/mails/${mailId}`,
       undefined,
-      body
+      reqBody
     );
+
+    return body;
   }
 }
 

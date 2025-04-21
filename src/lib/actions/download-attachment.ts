@@ -34,14 +34,12 @@ export const downloadAttachment = createAction({
   async run({ auth, propsValue }) {
     const client = makeClient(auth);
     const { mailId, attachmentId, outputFormat } = propsValue;
-    const content = await client.downloadAttachment(mailId, attachmentId);
+    const content = await client.downloadAttachment(
+      mailId,
+      attachmentId,
+      outputFormat as 'original' | 'base64'
+    );
 
-    if (outputFormat === 'original') {
-      return content;
-    }
-
-    const base64content = Buffer.from(await content.arrayBuffer()).toString('base64');
-
-    return base64content;
+    return content;
   },
 });
